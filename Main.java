@@ -4,7 +4,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
 
-class InputExample extends JFrame implements ActionListener {
+class Main extends JFrame implements ActionListener {
     private JTextField textField;
     private JButton button;
     private JLabel label;
@@ -20,7 +20,7 @@ class InputExample extends JFrame implements ActionListener {
 
     private int qCount = 0;
 
-    public InputExample() 
+    public Main() 
     {
         profiles = new ArrayList<Profile>();
         currentAnswers = new ArrayList<String>();
@@ -71,7 +71,7 @@ class InputExample extends JFrame implements ActionListener {
     }
     public static void main(String[] args) 
     {
-        new InputExample();
+        new Main();
     }
 }
 
@@ -88,7 +88,7 @@ class Profile
         return answers;
     }
 }
-public class CPU 
+class CPU 
 {
 	private String name;
 	private int age;
@@ -108,4 +108,5 @@ public class CPU
 		this.bio = bio;
 	}
 }
+
 
