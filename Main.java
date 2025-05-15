@@ -108,5 +108,3 @@ class CPU
 		this.bio = bio;
 	}
 }
-
-
