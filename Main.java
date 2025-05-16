@@ -103,7 +103,7 @@ class Main extends JFrame implements ActionListener {
     }
 
     private void addDefaultCPUs() {
-        CPU ej18= new CPU("emily jones", 21, "softball", "stanford", "6'7", true, "i hate kaden choi");
+        CPU ej18= new CPU("Emily Jones", 21, "softball", "stanford", "5'5", true, "i hate kaden choi");
         people.addCPU(ej18);
     }
 
