@@ -14,7 +14,12 @@ class Main extends JFrame implements ActionListener {
     private String[] questions = 
     {
         "What's your name?", 
-        "What grade are you in?"
+        "What grade are you in?",
+        "What is your hobby?",
+        "Where are you located?",
+        "How tall are you?",
+        "What is your gender?",
+        "Tell us a little about yourself:"
     };
 
     private int qCount = 0;
@@ -73,6 +78,7 @@ class Main extends JFrame implements ActionListener {
                 button.setVisible(false);
                 label.setText("Survey complete! Click a profile to view it:");
                 showProfileButtons();         // Show CPU buttons
+                addProfileButton();
             }
         }
     }
@@ -101,10 +107,32 @@ class Main extends JFrame implements ActionListener {
         cpuPanel.revalidate();
         cpuPanel.repaint();
     }
+    private void addProfileButton(){
+        JButton profileBut = new JButton(currentAnswers.get(0));
+        cpuPanel.add(profileBut);
+        profileBut.setBounds(350, 150, 100, 30);
+        profileBut.setVisible(true);
+        profileBut.setEnabled(true);
+        profileBut.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                    JOptionPane.showMessageDialog(null,
+                        "Name: " + currentAnswers.get(0)+ "\n" +
+                        "Age: " + currentAnswers.get(1) + "\n" +
+                        "Hobbies: " + currentAnswers.get(2) + "\n" +
+                        "Location: " + currentAnswers.get(3) + "\n" +
+                        "Height: " + currentAnswers.get(4) + "\n" +
+                        "Gender: " + currentAnswers.get(5) + "\n" +
+                        "Bio: " + currentAnswers.get(6)
+                    );
+                }
+            });
+    }
 
     private void addDefaultCPUs() {
         CPU ej18= new CPU("Emily Jones", 21, "softball", "stanford", "5'5", true, "i hate kaden choi");
+        CPU kChoi = new CPU ("Kiana Choi", 18, "Dance", "Carlmont", "4'11", true, "Its not the size of the dog in the fight it's the size of the fight in the dog");
         people.addCPU(ej18);
+        people.addCPU(kChoi);
     }
 
     public static void main(String[] args) {
