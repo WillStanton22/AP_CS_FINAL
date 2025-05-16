@@ -1,8 +1,6 @@
 import java.util.ArrayList;
-import javax.swing.JFrame;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.ArrayList;
 
 class Main extends JFrame implements ActionListener {
     private JTextField textField;
@@ -10,7 +8,8 @@ class Main extends JFrame implements ActionListener {
     private JLabel label;
     private ArrayList<Profile> profiles;
     private ArrayList<String> currentAnswers;
-    
+    private JPanel cpuPanel;
+    private People people;
 
     private String[] questions = 
     {
@@ -24,14 +23,17 @@ class Main extends JFrame implements ActionListener {
     {
         profiles = new ArrayList<Profile>();
         currentAnswers = new ArrayList<String>();
+        people = new People();
+        addDefaultCPUs();
         
+
         setTitle("Input Example");
-        setSize(400, 200);
+        setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
 
         label = new JLabel(questions[qCount]);
-        label.setBounds(50, 20, 300, 20);
+        label.setBounds(50, 20, 400, 20);
         textField = new JTextField();
         textField.setBounds(50, 50, 250, 20);
         button = new JButton("Submit");
@@ -42,38 +44,75 @@ class Main extends JFrame implements ActionListener {
         add(button);
         button.addActionListener(this);
 
+        // CPU Button Panel
+        cpuPanel = new JPanel();
+        cpuPanel.setBounds(50, 150, 400, 200);
+        cpuPanel.setLayout(new BoxLayout(cpuPanel, BoxLayout.Y_AXIS));
+        add(cpuPanel);
+
         setVisible(true);
     }
-    public void actionPerformed(ActionEvent e) 
-    {
-        if (e.getSource() == button) 
-        {
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == button) {
             String answer = textField.getText().trim();
-            if (!answer.isEmpty()) 
-            {
+            if (!answer.isEmpty()) {
                 currentAnswers.add(answer);
                 qCount++;
                 textField.setText("");
             }
-            if (qCount < questions.length) 
-            {
+
+            if (qCount < questions.length) {
                 label.setText(questions[qCount]);
-            } 
-            else 
-            {
+            } else {
                 Profile newProfile = new Profile(currentAnswers);
                 profiles.add(newProfile);
-                qCount = 0;
-                currentAnswers = new ArrayList<String>();
-                label.setText(questions[qCount]);
+                textField.setEnabled(false);  // Disable input
+                textField.setVisible(false);
+                button.setEnabled(false);     // Disable submit
+                button.setVisible(false);
+                label.setText("Survey complete! Click a profile to view it:");
+                showProfileButtons();         // Show CPU buttons
             }
         }
     }
-    public static void main(String[] args) 
-    {
+
+    private void showProfileButtons() {
+        for (CPU cpu : people.getCPUs()) {
+            JButton cpuButton = new JButton(cpu.getName());
+            cpuPanel.add(cpuButton);
+            cpuButton.setVisible(true);
+            cpuButton.setEnabled(true);
+            cpuButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    JOptionPane.showMessageDialog(null,
+                        "Name: " + cpu.getName() + "\n" +
+                        "Age: " + cpu.getAge() + "\n" +
+                        "Hobbies: " + cpu.getHobbies() + "\n" +
+                        "Location: " + cpu.getLocation() + "\n" +
+                        "Height: " + cpu.getHeight() + "\n" +
+                        "Gender: " + (cpu.isFemale() ? "Female" : "Male") + "\n" +
+                        "Bio: " + cpu.getBio()
+                    );
+                }
+            });
+            
+        }
+        cpuPanel.revalidate();
+        cpuPanel.repaint();
+    }
+
+    private void addDefaultCPUs() {
+        CPU ej18= new CPU("emily jones", 21, "softball", "stanford", "6'7", true, "i hate kaden choi");
+        people.addCPU(ej18);
+    }
+
+    public static void main(String[] args) {
         new Main();
     }
 }
+
+
 
 
 class Profile 
@@ -107,6 +146,71 @@ class CPU
 		this.isFemale = isFemale;
 		this.bio = bio;
 	}
+    public String getName()
+    {
+        return name;
+    }
+    public int getAge()
+    {
+        return age;
+    }
+    public String getHobbies()
+    {
+        return hobbies;
+    }
+    public String getHeight()
+    {
+        return height;
+    }
+    public String getLocation()
+    {
+        return location;
+    }
+    public boolean isFemale()
+    {
+        return isFemale;
+    }
+    public String getBio()
+    {
+        return bio;
+    }
+    private void showProfileButtons(People people, JPanel buttonPanel) 
+    {
+    for (CPU cpu : people.getCPUs()) 
+    {
+        JButton cpuButton = new JButton(cpu.getName()); // use a getter
+        cpuButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null,
+                    "Name: " + cpu.getName() + "\n" +
+                    "Age: " + cpu.getAge() + "\n" +
+                    "Hobbies: " + cpu.getHobbies() + "\n" +
+                    "Location: " + cpu.getLocation() + "\n" +
+                    "Height: " + cpu.getHeight() + "\n" +
+                    "Gender: " + (cpu.isFemale() ? "Female" : "Male") + "\n" +
+                    "Bio: " + cpu.getBio()
+                );
+            }
+        });
+        buttonPanel.add(cpuButton);
+    }
+    
 }
+}
+class People 
+{
+    private ArrayList<CPU> cpu;
 
+    public People() {
+        cpu = new ArrayList<CPU>();
+    }
 
+    public void addCPU(CPU c) {
+        cpu.add(c);
+    }
+
+    public ArrayList<CPU> getCPUs() {
+        return cpu;
+    }
+
+}
