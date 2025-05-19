@@ -10,6 +10,7 @@ class Main extends JFrame implements ActionListener {
     private ArrayList<String> currentAnswers;
     private JPanel cpuPanel;
     private People people;
+    private JPanel proPanel;
 
     private String[] questions = 
     {
@@ -54,6 +55,12 @@ class Main extends JFrame implements ActionListener {
         cpuPanel.setBounds(50, 150, 400, 200);
         cpuPanel.setLayout(new BoxLayout(cpuPanel, BoxLayout.Y_AXIS));
         add(cpuPanel);
+
+        // Profile Panel
+        proPanel = new JPanel();
+        proPanel.setBounds(400, 15, 450, 100);
+        proPanel.setLayout(new BoxLayout(proPanel, BoxLayout.Y_AXIS));
+        add(proPanel);
 
         setVisible(true);
     }
@@ -109,10 +116,10 @@ class Main extends JFrame implements ActionListener {
     }
     private void addProfileButton(){
         JButton profileBut = new JButton(currentAnswers.get(0));
-        cpuPanel.add(profileBut);
-        profileBut.setBounds(350, 150, 100, 30);
+        proPanel.add(profileBut);
         profileBut.setVisible(true);
         profileBut.setEnabled(true);
+        profileBut.setBounds(425, 0, 100, 30);
         profileBut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(null,
