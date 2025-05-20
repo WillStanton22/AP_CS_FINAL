@@ -14,7 +14,7 @@ class Main extends JFrame implements ActionListener {
     private JPanel proPanel;
 
     private String[] questions = {
-        "What's your name?", 
+        "What's your name?",
         "What grade are you in?",
         "What is your hobby?",
         "Where are you located?",
@@ -32,14 +32,17 @@ class Main extends JFrame implements ActionListener {
         addDefaultCPUs();
 
         setTitle("Profile Survey");
-        setSize(600, 500);
+        setSize(700, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         Font font = new Font("Segoe UI", Font.PLAIN, 16);
+
+        // Survey input panel (center)
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
         label = new JLabel(questions[qCount]);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -54,28 +57,39 @@ class Main extends JFrame implements ActionListener {
         button.setFont(font);
         button.addActionListener(this);
 
-        mainPanel.add(label);
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        mainPanel.add(textField);
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        mainPanel.add(button);
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        centerPanel.add(label);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        centerPanel.add(textField);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        centerPanel.add(button);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        cpuPanel = new JPanel();
-        cpuPanel.setLayout(new BoxLayout(cpuPanel, BoxLayout.Y_AXIS));
-        cpuPanel.setBorder(BorderFactory.createTitledBorder("Profiles"));
-        cpuPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        cpuPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
-
+        // Top panel with profile button
         proPanel = new JPanel();
-        proPanel.setLayout(new BoxLayout(proPanel, BoxLayout.Y_AXIS));
-        proPanel.setBorder(BorderFactory.createTitledBorder("Your Profile"));
-        proPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        proPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
+        proPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        JPanel topBar = new JPanel(new BorderLayout());
+        topBar.add(proPanel, BorderLayout.EAST);
 
-        mainPanel.add(cpuPanel);
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        mainPanel.add(proPanel);
+        // CPU grid panel with scroll
+        cpuPanel = new JPanel(new GridLayout(0, 3, 10, 10));
+
+        JScrollPane cpuScrollPane = new JScrollPane(cpuPanel);
+        cpuScrollPane.setPreferredSize(new Dimension(600, 250));
+
+        JLabel profileHeader = new JLabel("Profiles");
+        profileHeader.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        profileHeader.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel southPanel = new JPanel();
+        southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
+        southPanel.add(profileHeader);
+        southPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        southPanel.add(cpuScrollPane);
+
+        // Assemble all panels
+        mainPanel.add(topBar, BorderLayout.NORTH);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        mainPanel.add(southPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
         setVisible(true);
@@ -115,6 +129,7 @@ class Main extends JFrame implements ActionListener {
             JButton cpuButton = new JButton(cpu.getName(), icon);
             cpuButton.setHorizontalTextPosition(SwingConstants.CENTER);
             cpuButton.setVerticalTextPosition(SwingConstants.BOTTOM);
+            cpuButton.setPreferredSize(new Dimension(120, 120));
 
             cpuButton.addActionListener(e -> {
                 JOptionPane.showMessageDialog(null,
@@ -137,9 +152,21 @@ class Main extends JFrame implements ActionListener {
 
     private void addProfileButton() {
         JButton profileBut = new JButton(currentAnswers.get(0));
+        profileBut.setPreferredSize(new Dimension(60, 60));
+        profileBut.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        profileBut.setContentAreaFilled(false);
+        profileBut.setFocusPainted(false);
+        profileBut.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
+        profileBut.setOpaque(true);
+        profileBut.setBackground(Color.LIGHT_GRAY);
+        profileBut.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        profileBut.setBorderPainted(false);
+
+        proPanel.removeAll();
         proPanel.add(profileBut);
-        profileBut.setVisible(true);
-        profileBut.setEnabled(true);
+        proPanel.revalidate();
+        proPanel.repaint();
+
         profileBut.addActionListener(e -> {
             JOptionPane.showMessageDialog(null,
                 "Name: " + currentAnswers.get(0) + "\n" +
@@ -154,8 +181,12 @@ class Main extends JFrame implements ActionListener {
     }
 
     private void addDefaultCPUs() {
-        CPU ej18 = new CPU("Emily Jones", 21, "softball", "stanford", "5'5", true, "i hate kaden choi", "will!.webp");
-        people.addCPU(ej18);
+        people.addCPU(new CPU("Emily Jones", 21, "softball", "stanford", "5'5", true, "i hate kaden choi", "images/will!.webp"));
+        people.addCPU(new CPU("Kiana Choi", 18, "dance", "san carlos", "4’11", true, "??", "images/will!.webp"));
+        people.addCPU(new CPU("Sofie Budman", 16, "?", "redwood shores", "??", true, "??", "images/will!.webp"));
+        people.addCPU(new CPU("??", 18, "cheerleading", "near you", "5’8", true, "??", "images/will!.webp"));
+        people.addCPU(new CPU("??", 5, "watching cocomelon", "belmont", "4’2", false, "i stole my mommy's ipad", "images/will!.webp"));
+        people.addCPU(new CPU("Eileen Gu", 21, "skiing, modeling", "stanford", "5’9", true, "??", "images/will!.webp"));
     }
 
     public static void main(String[] args) {
@@ -167,6 +198,8 @@ class Main extends JFrame implements ActionListener {
         SwingUtilities.invokeLater(() -> new Main());
     }
 }
+
+// Supporting classes remain the same...
 
 class Profile {
     private ArrayList<String> answers;
@@ -199,30 +232,14 @@ class CPU {
         this.imagePath = imagePath;
     }
 
-    public String getImagePath() {
-        return imagePath;
-    }
-    public String getName() {
-        return name;
-    }
-    public int getAge() {
-        return age;
-    }
-    public String getHobbies() {
-        return hobbies;
-    }
-    public String getHeight() {
-        return height;
-    }
-    public String getLocation() {
-        return location;
-    }
-    public boolean isFemale() {
-        return isFemale;
-    }
-    public String getBio() {
-        return bio;
-    }
+    public String getImagePath() { return imagePath; }
+    public String getName() { return name; }
+    public int getAge() { return age; }
+    public String getHobbies() { return hobbies; }
+    public String getHeight() { return height; }
+    public String getLocation() { return location; }
+    public boolean isFemale() { return isFemale; }
+    public String getBio() { return bio; }
 }
 
 class People {
