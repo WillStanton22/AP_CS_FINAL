@@ -170,7 +170,7 @@ class Main extends JFrame implements ActionListener {
         profileBut.addActionListener(e -> {
             JOptionPane.showMessageDialog(null,
                 "Name: " + currentAnswers.get(0) + "\n" +
-                "Age: " + currentAnswers.get(1) + "\n" +
+                "Grade: " + currentAnswers.get(1) + "\n" +
                 "Hobbies: " + currentAnswers.get(2) + "\n" +
                 "Location: " + currentAnswers.get(3) + "\n" +
                 "Height: " + currentAnswers.get(4) + "\n" +
