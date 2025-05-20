@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.awt.event.*;
 import javax.swing.*;
+import java.awt.BorderLayout;
 
 class Main extends JFrame implements ActionListener {
     private JTextField textField;
@@ -11,6 +12,8 @@ class Main extends JFrame implements ActionListener {
     private JPanel cpuPanel;
     private People people;
     private JPanel proPanel;
+
+    ImageIcon imageWill= new ImageIcon("will.pdf");
 
     private String[] questions = 
     {
@@ -116,21 +119,29 @@ class Main extends JFrame implements ActionListener {
     }
     private void addProfileButton(){
         JButton profileBut = new JButton(currentAnswers.get(0));
+        JLabel proPic = new JLabel(imageWill);
+        JPanel imagePanel = new JPanel();
+        add(imagePanel);
+        JLabel profileInfo = new JLabel("Name: " + currentAnswers.get(0)+ "\n" +
+                        "Age: " + currentAnswers.get(1) + "\n" +
+                        "Hobbies: " + currentAnswers.get(2) + "\n" +
+                        "Location: " + currentAnswers.get(3) + "\n" +
+                        "Height: " + currentAnswers.get(4) + "\n" +
+                        "Gender: " + currentAnswers.get(5) + "\n" +
+                        "Bio: " + currentAnswers.get(6));
+        imagePanel.setLayout(new BorderLayout());
+        imagePanel.add(proPic, BorderLayout.WEST);
+        imagePanel.add(profileInfo, BorderLayout.EAST);
         proPanel.add(profileBut);
         profileBut.setVisible(true);
         profileBut.setEnabled(true);
         profileBut.setBounds(425, 0, 100, 30);
         profileBut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                    JOptionPane.showMessageDialog(null,
-                        "Name: " + currentAnswers.get(0)+ "\n" +
-                        "Age: " + currentAnswers.get(1) + "\n" +
-                        "Hobbies: " + currentAnswers.get(2) + "\n" +
-                        "Location: " + currentAnswers.get(3) + "\n" +
-                        "Height: " + currentAnswers.get(4) + "\n" +
-                        "Gender: " + currentAnswers.get(5) + "\n" +
-                        "Bio: " + currentAnswers.get(6)
-                    );
+                    JOptionPane.showMessageDialog(null, imagePanel, "Profile",JOptionPane.PLAIN_MESSAGE);
+                    
+                    //proPic.setBounds();
+                    
                 }
             });
     }
