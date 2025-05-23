@@ -12,6 +12,7 @@ class Main extends JFrame implements ActionListener {
     private JPanel cpuPanel;
     private People people;
     private JPanel proPanel;
+    private JTextArea profileDetailsArea;
 
     private String[] questions = {
         "What's your name?",
@@ -72,7 +73,6 @@ class Main extends JFrame implements ActionListener {
 
         // CPU grid panel with scroll
         cpuPanel = new JPanel(new GridLayout(0, 3, 10, 10));
-
         JScrollPane cpuScrollPane = new JScrollPane(cpuPanel);
         cpuScrollPane.setPreferredSize(new Dimension(600, 250));
 
@@ -80,13 +80,21 @@ class Main extends JFrame implements ActionListener {
         profileHeader.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         profileHeader.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        profileDetailsArea = new JTextArea(7, 50);
+        profileDetailsArea.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        profileDetailsArea.setEditable(false);
+        profileDetailsArea.setLineWrap(true);
+        profileDetailsArea.setWrapStyleWord(true);
+        profileDetailsArea.setBorder(BorderFactory.createTitledBorder("Profile Details"));
+
         JPanel southPanel = new JPanel();
         southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
         southPanel.add(profileHeader);
         southPanel.add(Box.createRigidArea(new Dimension(0, 5)));
         southPanel.add(cpuScrollPane);
+        southPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        southPanel.add(profileDetailsArea);
 
-        // Assemble all panels
         mainPanel.add(topBar, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(southPanel, BorderLayout.SOUTH);
@@ -132,7 +140,7 @@ class Main extends JFrame implements ActionListener {
             cpuButton.setPreferredSize(new Dimension(120, 120));
 
             cpuButton.addActionListener(e -> {
-                JOptionPane.showMessageDialog(null,
+                profileDetailsArea.setText(
                     "Name: " + cpu.getName() + "\n" +
                     "Age: " + cpu.getAge() + "\n" +
                     "Hobbies: " + cpu.getHobbies() + "\n" +
@@ -168,7 +176,7 @@ class Main extends JFrame implements ActionListener {
         proPanel.repaint();
 
         profileBut.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null,
+            profileDetailsArea.setText(
                 "Name: " + currentAnswers.get(0) + "\n" +
                 "Grade: " + currentAnswers.get(1) + "\n" +
                 "Hobbies: " + currentAnswers.get(2) + "\n" +
@@ -198,8 +206,6 @@ class Main extends JFrame implements ActionListener {
         SwingUtilities.invokeLater(() -> new Main());
     }
 }
-
-// Supporting classes remain the same...
 
 class Profile {
     private ArrayList<String> answers;
