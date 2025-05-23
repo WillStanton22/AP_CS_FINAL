@@ -13,12 +13,12 @@ class Main extends JFrame implements ActionListener {
     private People people;
     private JPanel proPanel;
 
-    ImageIcon imageWill= new ImageIcon("will.pdf");
+    JLabel imageWill =new JLabel (new ImageIcon(getClass().getResource("will.png")));
 
     private String[] questions = 
     {
         "What's your name?", 
-        "What grade are you in?",
+        "How old are you?",
         "What is your hobby?",
         "Where are you located?",
         "How tall are you?",
@@ -119,7 +119,6 @@ class Main extends JFrame implements ActionListener {
     }
     private void addProfileButton(){
         JButton profileBut = new JButton(currentAnswers.get(0));
-        JLabel proPic = new JLabel(imageWill);
         JPanel imagePanel = new JPanel();
         add(imagePanel);
         JLabel profileInfo = new JLabel("Name: " + currentAnswers.get(0)+ "\n" +
@@ -130,7 +129,8 @@ class Main extends JFrame implements ActionListener {
                         "Gender: " + currentAnswers.get(5) + "\n" +
                         "Bio: " + currentAnswers.get(6));
         imagePanel.setLayout(new BorderLayout());
-        imagePanel.add(proPic, BorderLayout.WEST);
+        imageWill.setVisible(true);
+        imagePanel.add(imageWill, BorderLayout.WEST);
         imagePanel.add(profileInfo, BorderLayout.EAST);
         proPanel.add(profileBut);
         profileBut.setVisible(true);
@@ -138,10 +138,7 @@ class Main extends JFrame implements ActionListener {
         profileBut.setBounds(425, 0, 100, 30);
         profileBut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                    JOptionPane.showMessageDialog(null, imagePanel, "Profile",JOptionPane.PLAIN_MESSAGE);
-                    
-                    //proPic.setBounds();
-                    
+                    JOptionPane.showMessageDialog(null, imagePanel, "Profile",JOptionPane.DEFAULT_OPTION);    
                 }
             });
     }
