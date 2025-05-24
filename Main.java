@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.awt.BorderLayout;
 
 public class Main extends JFrame implements ActionListener {
     private JTextField textField;
@@ -317,6 +318,7 @@ rightTopPanel.repaint();
         profileBut.addActionListener(e -> {
             JOptionPane.showMessageDialog(this,
                 "Name: " + currentAnswers.get(0) + "\n" +
+                "Age: " + currentAnswers.get(1) + "\n" +
                 "Age: " + currentAnswers.get(1) + "\n" +
                 "Hobbies: " + currentAnswers.get(2) + "\n" +
                 "Location: " + currentAnswers.get(3) + "\n" +
