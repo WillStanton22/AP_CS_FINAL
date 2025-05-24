@@ -220,7 +220,7 @@ leftTopPanel.add(showFavoritesButton);
 
         ImageIcon heartIcon = new ImageIcon("images/heart.png");
         Image scaledHeart = heartIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
-        JButton heartButton = new JButton(new ImageIcon(scaledHeart) + "Add to favorites");
+        JButton heartButton = new JButton(new ImageIcon(scaledHeart));
         heartButton.setContentAreaFilled(false);
         heartButton.setBorderPainted(false);
         heartButton.setFocusPainted(false);
@@ -330,14 +330,14 @@ rightTopPanel.repaint();
     }
 
     private void addDefaultCPUs() {
-        people.addCPU(new CPU("Emily Jones", 21, "softball", "stanford", "5'5", true, "i hate kaden choi", "images/will!.webp", "brown", "brown", "white & asian"));
-        people.addCPU(new CPU("Kiana Choi", 18, "dance", "san carlos", "4’11", true, "inner beauty is great but so is a good tan", "images/will!.webp", "brown", "brown", "asian"));
-        people.addCPU(new CPU("Sofie Budman", 16, "basketball", "redwood shores", "5'6", true, "put down whatever", "images/will!.webp", "brown", "brown", "white & asian"));
-        people.addCPU(new CPU("Chloe Smith", 18, "cheerleading", "near you", "5’8", true, "looking for hot females near me", "images/will!.webp", "blonde", "blue", "white"));
-        people.addCPU(new CPU("Michael Brown", 5, "watching cocomelon", "belmont", "4’2", false, "i stole my mommy's ipad", "images/will!.webp", "brown", "green", "white"));
-        people.addCPU(new CPU("Eileen Gu", 21, "skiing, modeling", "stanford", "5’9", true, "??", "images/will!.webp", "brown", "brown", "white & asian"));
-        people.addCPU(new CPU("Mikael Brunshteyn", 16, "basketball", "carlmont", "6'7", false, "too early", "images/will!.webp", "light brown", "brown", "white"));
-        people.addCPU(new CPU("William Stanton", 17, "soccer", "carlmont", "6'2", false, "i love men", "images/will!.webp", "light brown", "brown", "white"));
+        people.addCPU(new CPU("Emily Jones", 21, "softball", "stanford", "5'5", true, "i hate kaden choi", "images/heart.png", "brown", "brown", "white & asian"));
+        people.addCPU(new CPU("Kiana Choi", 18, "dance", "san carlos", "4’11", true, "inner beauty is great but so is a good tan", "images/heart.png", "brown", "brown", "asian"));
+        people.addCPU(new CPU("Sofie Budman", 16, "basketball", "redwood shores", "5'6", true, "put down whatever", "images/heart.png", "brown", "brown", "white & asian"));
+        people.addCPU(new CPU("Chloe Smith", 18, "cheerleading", "near you", "5’8", true, "looking for hot females near me", "images/heart.png", "blonde", "blue", "white"));
+        people.addCPU(new CPU("Michael Brown", 5, "watching cocomelon", "belmont", "4’2", false, "i stole my mommy's ipad", "images/heart.png", "brown", "green", "white"));
+        people.addCPU(new CPU("Eileen Gu", 21, "skiing, modeling", "stanford", "5’9", true, "??", "images/heart.png", "brown", "brown", "white & asian"));
+        people.addCPU(new CPU("Mikael Brunshteyn", 16, "basketball", "carlmont", "6'7", false, "too early", "images/heart.png", "light brown", "brown", "white"));
+        people.addCPU(new CPU("William Stanton", 17, "soccer", "carlmont", "6'2", false, "i love men", "images/heart.png", "light brown", "brown", "white"));
     }
 
     private void showFavoritesDialog() 
@@ -349,7 +349,7 @@ rightTopPanel.repaint();
 
     StringBuilder sb = new StringBuilder("Favorite Profiles:\n\n");
     for (CPU cpu : favorites) {
-        sb.append(cpu.getName()).append(" - Age: ").append(cpu.getAge()).append("\n");
+        sb.append(cpu.getName()).append("\n");
     }
 
     JOptionPane.showMessageDialog(this, sb.toString(), "Favorites", JOptionPane.INFORMATION_MESSAGE);
