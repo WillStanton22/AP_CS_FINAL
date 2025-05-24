@@ -3,207 +3,362 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-class Main extends JFrame implements ActionListener {
+public class Main extends JFrame implements ActionListener {
     private JTextField textField;
     private JButton button;
     private JLabel label;
-    private ArrayList<Profile> profiles;
-    private ArrayList<String> currentAnswers;
-    private JPanel cpuPanel;
-    private People people;
-    private JPanel proPanel;
-    private JTextArea profileDetailsArea;
+    private ArrayList<Profile> profiles = new ArrayList<>();
+    private ArrayList<String> currentAnswers = new ArrayList<>();
+    private JPanel cpuPanel, proPanel, filterPanel;
+    private People people = new People();
+    private ArrayList<CPU> favorites = new ArrayList<>();
 
-    private String[] questions = {
-        "What's your name?",
-        "What grade are you in?",
-        "What is your hobby?",
-        "Where are you located?",
-        "How tall are you?",
-        "What is your gender?",
-        "Tell us a little about yourself:"
-    };
 
+    private JCheckBox femaleBox, hobbiesBox, locationBox, hairBox, eyesBox, raceBox, williamBox;
+    private JButton toggleFilterButton;
     private int qCount = 0;
 
+    private String[] questions = {
+        "What's your name?", "How old are you?", "What is your hobby?",
+        "Where are you located?", "How tall are you?", "What is your gender?", "What is your preferred gender?", 
+        "Tell us a little about yourself:", "Preferred eye color?",
+        "Preferred hair color?", "Preferred race?"
+    };
+
     public Main() {
-        profiles = new ArrayList<>();
-        currentAnswers = new ArrayList<>();
-        people = new People();
         addDefaultCPUs();
+        setupUI();
+    }
 
+    private void setupUI() {
         setTitle("Profile Survey");
-        setSize(700, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        setSize(900, 700);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
 
         Font font = new Font("Segoe UI", Font.PLAIN, 16);
 
-        // Survey input panel (center)
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        // Top Bar
+        proPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        add(proPanel, BorderLayout.NORTH);
+
+        // Center panel for survey
+        JPanel centerPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
 
         label = new JLabel(questions[qCount]);
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
         label.setFont(font);
+        centerPanel.add(label, gbc);
 
-        textField = new JTextField();
-        textField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        textField = new JTextField(20);
         textField.setFont(font);
+        gbc.gridy++;
+        centerPanel.add(textField, gbc);
 
         button = new JButton("Submit");
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.setFont(font);
         button.addActionListener(this);
+        gbc.gridy++;
+        centerPanel.add(button, gbc);
 
-        centerPanel.add(label);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        centerPanel.add(textField);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        centerPanel.add(button);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        add(centerPanel, BorderLayout.CENTER);
 
-        // Top panel with profile button
-        proPanel = new JPanel();
-        proPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        JPanel topBar = new JPanel(new BorderLayout());
-        topBar.add(proPanel, BorderLayout.EAST);
-
-        // CPU grid panel with scroll
+        // South panel for CPU profiles
         cpuPanel = new JPanel(new GridLayout(0, 3, 10, 10));
-        JScrollPane cpuScrollPane = new JScrollPane(cpuPanel);
-        cpuScrollPane.setPreferredSize(new Dimension(600, 250));
-
-        JLabel profileHeader = new JLabel("Profiles");
-        profileHeader.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        profileHeader.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        profileDetailsArea = new JTextArea(7, 50);
-        profileDetailsArea.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        profileDetailsArea.setEditable(false);
-        profileDetailsArea.setLineWrap(true);
-        profileDetailsArea.setWrapStyleWord(true);
-        profileDetailsArea.setBorder(BorderFactory.createTitledBorder("Profile Details"));
-
+        JScrollPane scrollPane = new JScrollPane(cpuPanel);
+        scrollPane.setPreferredSize(new Dimension(600, 250));
         JPanel southPanel = new JPanel();
         southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
-        southPanel.add(profileHeader);
-        southPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        southPanel.add(cpuScrollPane);
-        southPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        southPanel.add(profileDetailsArea);
 
-        mainPanel.add(topBar, BorderLayout.NORTH);
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
-        mainPanel.add(southPanel, BorderLayout.SOUTH);
+        JLabel cpuLabel = new JLabel("Profiles");
+        cpuLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 
-        add(mainPanel);
+        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        headerPanel.add(cpuLabel);
+
+        toggleFilterButton = new JButton("Click to Filter");
+        toggleFilterButton.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        toggleFilterButton.setVisible(false);
+        toggleFilterButton.addActionListener(e -> filterPanel.setVisible(!filterPanel.isVisible()));
+        headerPanel.add(toggleFilterButton);
+
+        southPanel.add(headerPanel);
+        southPanel.add(scrollPane);
+        add(southPanel, BorderLayout.SOUTH);
+
+        // Create a wrapper panel with BorderLayout for the top bar
+proPanel = new JPanel(new BorderLayout());
+add(proPanel, BorderLayout.NORTH);
+
+// Create the left and right sub-panels
+JPanel leftTopPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+JPanel rightTopPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+// Add them to the main top bar
+proPanel.add(leftTopPanel, BorderLayout.WEST);
+proPanel.add(rightTopPanel, BorderLayout.EAST);
+
+// Create the favorites button and add to left
+JButton showFavoritesButton = new JButton("Show Favorites");
+showFavoritesButton.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+showFavoritesButton.addActionListener(e -> showFavoritesDialog());
+leftTopPanel.add(showFavoritesButton);
+
+
+
         setVisible(true);
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == button) {
-            String answer = textField.getText().trim();
-            if (!answer.isEmpty()) {
-                currentAnswers.add(answer);
-                qCount++;
-                textField.setText("");
+    String input = textField.getText().trim();
+    if (!input.isEmpty()) {
+        // Age validation for qCount == 1
+        if (qCount == 1) {
+            try {
+                int age = Integer.parseInt(input);
+                if (age < 15) {
+                    JOptionPane.showMessageDialog(this, "Too young!", "Age Warning", JOptionPane.WARNING_MESSAGE);
+                    return; // Block progress
+                } else if (age > 20) {
+                    JOptionPane.showMessageDialog(this, "You're old!", "Age Warning", JOptionPane.WARNING_MESSAGE);
+                    return; // Block progress
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid number for age.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                return; // Block progress
             }
+        }
 
-            if (qCount < questions.length) {
-                label.setText(questions[qCount]);
-            } else {
-                Profile newProfile = new Profile(currentAnswers);
-                profiles.add(newProfile);
-                textField.setEnabled(false);
-                textField.setVisible(false);
-                button.setEnabled(false);
-                button.setVisible(false);
-                label.setText("Survey complete! Click a profile to view it:");
-                showProfileButtons();
-                addProfileButton();
-            }
+        currentAnswers.add(input);
+        qCount++;
+        textField.setText("");
+        if (qCount < questions.length) {
+            label.setText(questions[qCount]);
+        } else {
+            finalizeProfile();
+        }
+    }
+}
+
+
+
+    private void finalizeProfile() 
+    {
+        filterPanel = new JPanel();
+        filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.Y_AXIS));
+        profiles.add(new Profile(currentAnswers));
+        label.setText("Survey complete! Click a profile to view it:");
+        textField.setVisible(false);
+        button.setVisible(false);
+        showProfileButtons();
+        addProfileButton();
+        createFilterPanel();
+        add(filterPanel, BorderLayout.WEST);
+        toggleFilterButton.setVisible(true);
+    }
+
+    
+
+    private void createFilterPanel() {
+        Font font = new Font("Segoe UI", Font.PLAIN, 16);
+
+        femaleBox = new JCheckBox(currentAnswers.get(6));
+        hobbiesBox = new JCheckBox("Likes " + currentAnswers.get(2));
+        locationBox = new JCheckBox("Lives near " + currentAnswers.get(3));
+        hairBox = new JCheckBox(currentAnswers.get(9) + " Hair");
+        eyesBox = new JCheckBox(currentAnswers.get(8) + " Eyes");
+        raceBox = new JCheckBox(currentAnswers.get(10));
+        williamBox = new JCheckBox("Is William Stanton");
+
+        JCheckBox[] boxes = {femaleBox, hobbiesBox, locationBox, hairBox, eyesBox, raceBox, williamBox};
+        for (JCheckBox box : boxes) {
+            box.setFont(font);
+            box.addItemListener(e -> filterCPUs());
+            filterPanel.add(box);
         }
     }
 
     private void showProfileButtons() {
+        cpuPanel.removeAll();
         for (CPU cpu : people.getCPUs()) {
-            ImageIcon icon = new ImageIcon(cpu.getImagePath());
-            Image scaledImg = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
-            icon = new ImageIcon(scaledImg);
-
-            JButton cpuButton = new JButton(cpu.getName(), icon);
-            cpuButton.setHorizontalTextPosition(SwingConstants.CENTER);
-            cpuButton.setVerticalTextPosition(SwingConstants.BOTTOM);
-            cpuButton.setPreferredSize(new Dimension(120, 120));
-
-            cpuButton.addActionListener(e -> {
-                profileDetailsArea.setText(
-                    "Name: " + cpu.getName() + "\n" +
-                    "Age: " + cpu.getAge() + "\n" +
-                    "Hobbies: " + cpu.getHobbies() + "\n" +
-                    "Location: " + cpu.getLocation() + "\n" +
-                    "Height: " + cpu.getHeight() + "\n" +
-                    "Gender: " + (cpu.isFemale() ? "Female" : "Male") + "\n" +
-                    "Bio: " + cpu.getBio()
-                );
-            });
-
-            cpuPanel.add(cpuButton);
+            cpuPanel.add(createCPUButton(cpu));
         }
-
         cpuPanel.revalidate();
         cpuPanel.repaint();
     }
+
+    private JButton createCPUButton(CPU cpu) {
+    ImageIcon icon = new ImageIcon(cpu.getImagePath());
+    Image scaledImage = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+    JButton button = new JButton(cpu.getName(), new ImageIcon(scaledImage));
+    button.setHorizontalTextPosition(SwingConstants.CENTER);
+    button.setVerticalTextPosition(SwingConstants.BOTTOM);
+    button.setPreferredSize(new Dimension(120, 120));
+
+    button.addActionListener(e -> {
+        String message = "Name: " + cpu.getName() + "\n" +
+                         "Age: " + cpu.getAge() + "\n" +
+                         "Hobbies: " + cpu.getHobbies() + "\n" +
+                         "Location: " + cpu.getLocation() + "\n" +
+                         "Height: " + cpu.getHeight() + "\n" +
+                         "Gender: " + (cpu.isFemale() ? "Female" : "Male") + "\n" +
+                         "Hair: " + cpu.getHairColor() + "\n" +
+                         "Eyes: " + cpu.getEyeColor() + "\n" +
+                         "Race: " + cpu.getRace() + "\n" +
+                         "Bio: " + cpu.getBio();
+
+        JPanel panel = new JPanel(new BorderLayout());
+        JTextArea textArea = new JTextArea(message);
+        textArea.setEditable(false);
+        textArea.setBackground(null);
+        textArea.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        panel.add(textArea, BorderLayout.CENTER);
+
+        ImageIcon heartIcon = new ImageIcon("images/heart.png");
+        Image scaledHeart = heartIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+        JButton heartButton = new JButton(new ImageIcon(scaledHeart) + "Add to favorites");
+        heartButton.setContentAreaFilled(false);
+        heartButton.setBorderPainted(false);
+        heartButton.setFocusPainted(false);
+        heartButton.setToolTipText("Add to Favorites");
+
+        heartButton.addActionListener(ev -> {
+            if (!favorites.contains(cpu)) {
+                favorites.add(cpu);
+                JOptionPane.showMessageDialog(this, cpu.getName() + " has been added to your favorites!", "Favorites", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Already in favorites.", "Favorites", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        panel.add(heartButton, BorderLayout.SOUTH);
+        JOptionPane.showMessageDialog(this, panel, "Profile Details", JOptionPane.PLAIN_MESSAGE);
+    });
+
+    return button;
+}
+
+
+        private void filterCPUs() {
+    cpuPanel.removeAll();
+    for (CPU cpu : people.getCPUs()) {
+        boolean match = true;
+
+        if (femaleBox.isSelected()) {
+            String prefGender = currentAnswers.get(6).toLowerCase();
+            if ((prefGender.contains("f") && !cpu.isFemale()) ||
+                (prefGender.contains("m") && cpu.isFemale())) {
+                match = false;
+            }
+        }
+
+        if (hobbiesBox.isSelected() && 
+            !cpu.getHobbies().toLowerCase().contains(currentAnswers.get(2).toLowerCase())) {
+            match = false;
+        }
+
+        if (locationBox.isSelected() && 
+            !cpu.getLocation().toLowerCase().contains(currentAnswers.get(3).toLowerCase())) {
+            match = false;
+        }
+
+        if (hairBox.isSelected() && 
+            !cpu.getHairColor().toLowerCase().contains(currentAnswers.get(9).toLowerCase())) {
+            match = false;
+        }
+
+        if (eyesBox.isSelected() && 
+            !cpu.getEyeColor().toLowerCase().contains(currentAnswers.get(8).toLowerCase())) {
+            match = false;
+        }
+
+        if (raceBox.isSelected() && 
+            !cpu.getRace().toLowerCase().contains(currentAnswers.get(10).toLowerCase())) {
+            match = false;
+        }
+
+        if (williamBox.isSelected() && 
+            !cpu.getName().toLowerCase().contains("william stanton")) {
+            match = false;
+        }
+
+        if (match) {
+            cpuPanel.add(createCPUButton(cpu));
+        }
+    }
+
+    cpuPanel.revalidate();
+    cpuPanel.repaint();
+}
+
+
+
 
     private void addProfileButton() {
         JButton profileBut = new JButton(currentAnswers.get(0));
         profileBut.setPreferredSize(new Dimension(60, 60));
         profileBut.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         profileBut.setContentAreaFilled(false);
-        profileBut.setFocusPainted(false);
-        profileBut.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
         profileBut.setOpaque(true);
         profileBut.setBackground(Color.LIGHT_GRAY);
-        profileBut.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         profileBut.setBorderPainted(false);
+        JPanel rightTopPanel = (JPanel) ((BorderLayout) proPanel.getLayout()).getLayoutComponent(BorderLayout.EAST);
+rightTopPanel.removeAll();
+rightTopPanel.add(profileBut);
+rightTopPanel.revalidate();
+rightTopPanel.repaint();
 
-        proPanel.removeAll();
-        proPanel.add(profileBut);
         proPanel.revalidate();
         proPanel.repaint();
 
         profileBut.addActionListener(e -> {
-            profileDetailsArea.setText(
+            JOptionPane.showMessageDialog(this,
                 "Name: " + currentAnswers.get(0) + "\n" +
-                "Grade: " + currentAnswers.get(1) + "\n" +
+                "Age: " + currentAnswers.get(1) + "\n" +
                 "Hobbies: " + currentAnswers.get(2) + "\n" +
                 "Location: " + currentAnswers.get(3) + "\n" +
                 "Height: " + currentAnswers.get(4) + "\n" +
                 "Gender: " + currentAnswers.get(5) + "\n" +
-                "Bio: " + currentAnswers.get(6)
-            );
+                "Bio: " + currentAnswers.get(7) + "\n");
         });
+        
     }
 
     private void addDefaultCPUs() {
-        people.addCPU(new CPU("Emily Jones", 21, "softball", "stanford", "5'5", true, "i hate kaden choi", "images/will!.webp"));
-        people.addCPU(new CPU("Kiana Choi", 18, "dance", "san carlos", "4’11", true, "??", "images/will!.webp"));
-        people.addCPU(new CPU("Sofie Budman", 16, "?", "redwood shores", "??", true, "??", "images/will!.webp"));
-        people.addCPU(new CPU("??", 18, "cheerleading", "near you", "5’8", true, "??", "images/will!.webp"));
-        people.addCPU(new CPU("??", 5, "watching cocomelon", "belmont", "4’2", false, "i stole my mommy's ipad", "images/will!.webp"));
-        people.addCPU(new CPU("Eileen Gu", 21, "skiing, modeling", "stanford", "5’9", true, "??", "images/will!.webp"));
+        people.addCPU(new CPU("Emily Jones", 21, "softball", "stanford", "5'5", true, "i hate kaden choi", "images/will!.webp", "brown", "brown", "white & asian"));
+        people.addCPU(new CPU("Kiana Choi", 18, "dance", "san carlos", "4’11", true, "inner beauty is great but so is a good tan", "images/will!.webp", "brown", "brown", "asian"));
+        people.addCPU(new CPU("Sofie Budman", 16, "basketball", "redwood shores", "5'6", true, "put down whatever", "images/will!.webp", "brown", "brown", "white & asian"));
+        people.addCPU(new CPU("Chloe Smith", 18, "cheerleading", "near you", "5’8", true, "looking for hot females near me", "images/will!.webp", "blonde", "blue", "white"));
+        people.addCPU(new CPU("Michael Brown", 5, "watching cocomelon", "belmont", "4’2", false, "i stole my mommy's ipad", "images/will!.webp", "brown", "green", "white"));
+        people.addCPU(new CPU("Eileen Gu", 21, "skiing, modeling", "stanford", "5’9", true, "??", "images/will!.webp", "brown", "brown", "white & asian"));
+        people.addCPU(new CPU("Mikael Brunshteyn", 16, "basketball", "carlmont", "6'7", false, "too early", "images/will!.webp", "light brown", "brown", "white"));
+        people.addCPU(new CPU("William Stanton", 17, "soccer", "carlmont", "6'2", false, "i love men", "images/will!.webp", "light brown", "brown", "white"));
     }
+
+    private void showFavoritesDialog() 
+    {
+    if (favorites.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "You have no favorites yet.", "Favorites", JOptionPane.INFORMATION_MESSAGE);
+        return;
+    }
+
+    StringBuilder sb = new StringBuilder("Favorite Profiles:\n\n");
+    for (CPU cpu : favorites) {
+        sb.append(cpu.getName()).append(" - Age: ").append(cpu.getAge()).append("\n");
+    }
+
+    JOptionPane.showMessageDialog(this, sb.toString(), "Favorites", JOptionPane.INFORMATION_MESSAGE);
+    }
+
 
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        SwingUtilities.invokeLater(() -> new Main());
+        } catch (Exception ignored) {}
+        SwingUtilities.invokeLater(Main::new);
     }
 }
 
@@ -218,16 +373,12 @@ class Profile {
 }
 
 class CPU {
-    private String name;
+    private String name, hobbies, location, height, bio, imagePath, hairColor, eyeColor, race;
     private int age;
-    private String hobbies;
-    private String location;
-    private String height;
     private boolean isFemale;
-    private String bio;
-    private String imagePath;
 
-    public CPU(String name, int age, String hobbies, String location, String height, boolean isFemale, String bio, String imagePath) {
+    public CPU(String name, int age, String hobbies, String location, String height, boolean isFemale,
+               String bio, String imagePath, String hairColor, String eyeColor, String race) {
         this.name = name;
         this.age = age;
         this.hobbies = hobbies;
@@ -236,30 +387,26 @@ class CPU {
         this.isFemale = isFemale;
         this.bio = bio;
         this.imagePath = imagePath;
+        this.hairColor = hairColor;
+        this.eyeColor = eyeColor;
+        this.race = race;
     }
 
-    public String getImagePath() { return imagePath; }
     public String getName() { return name; }
     public int getAge() { return age; }
     public String getHobbies() { return hobbies; }
-    public String getHeight() { return height; }
     public String getLocation() { return location; }
+    public String getHeight() { return height; }
     public boolean isFemale() { return isFemale; }
     public String getBio() { return bio; }
+    public String getImagePath() { return imagePath; }
+    public String getHairColor() { return hairColor; }
+    public String getEyeColor() { return eyeColor; }
+    public String getRace() { return race; }
 }
 
 class People {
-    private ArrayList<CPU> cpu;
-
-    public People() {
-        cpu = new ArrayList<>();
-    }
-
-    public void addCPU(CPU c) {
-        cpu.add(c);
-    }
-
-    public ArrayList<CPU> getCPUs() {
-        return cpu;
-    }
+    private ArrayList<CPU> cpuList = new ArrayList<>();
+    public void addCPU(CPU c) { cpuList.add(c); }
+    public ArrayList<CPU> getCPUs() { return cpuList; }
 }
