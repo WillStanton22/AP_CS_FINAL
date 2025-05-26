@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.awt.BorderLayout;
 
 public class Main extends JFrame implements ActionListener {
     private JTextField textField;
@@ -243,47 +242,65 @@ leftTopPanel.add(showFavoritesButton);
 }
 
 
-        private void filterCPUs() {
+    private void filterCPUs() {
     cpuPanel.removeAll();
     for (CPU cpu : people.getCPUs()) {
         boolean match = true;
 
+        // Gender preference filter
         if (femaleBox.isSelected()) {
-            String prefGender = currentAnswers.get(6).toLowerCase();
-            if ((prefGender.contains("f") && !cpu.isFemale()) ||
-                (prefGender.contains("m") && cpu.isFemale())) {
+            String pref = currentAnswers.get(6).toLowerCase();
+            if ((pref.contains("f") && !cpu.isFemale()) ||
+                (pref.contains("m") && cpu.isFemale())) {
                 match = false;
             }
         }
 
-        if (hobbiesBox.isSelected() && 
-            !cpu.getHobbies().toLowerCase().contains(currentAnswers.get(2).toLowerCase())) {
-            match = false;
+        // Hobby match
+        if (hobbiesBox.isSelected()) {
+            String hobbyPref = currentAnswers.get(2).toLowerCase();
+            if (!cpu.getHobbies().toLowerCase().contains(hobbyPref)) {
+                match = false;
+            }
         }
 
-        if (locationBox.isSelected() && 
-            !cpu.getLocation().toLowerCase().contains(currentAnswers.get(3).toLowerCase())) {
-            match = false;
+        // Location match
+        if (locationBox.isSelected()) {
+            String locPref = currentAnswers.get(3).toLowerCase();
+            if (!cpu.getLocation().toLowerCase().contains(locPref)) {
+                match = false;
+            }
         }
 
-        if (hairBox.isSelected() && 
-            !cpu.getHairColor().toLowerCase().contains(currentAnswers.get(9).toLowerCase())) {
-            match = false;
+        // Hair color match
+        if (hairBox.isSelected()) {
+            String hairPref = currentAnswers.get(9).toLowerCase();
+            if (!cpu.getHairColor().toLowerCase().contains(hairPref)) {
+                match = false;
+            }
         }
 
-        if (eyesBox.isSelected() && 
-            !cpu.getEyeColor().toLowerCase().contains(currentAnswers.get(8).toLowerCase())) {
-            match = false;
+        // Eye color match
+        if (eyesBox.isSelected()) {
+            String eyePref = currentAnswers.get(8).toLowerCase();
+            if (!cpu.getEyeColor().toLowerCase().contains(eyePref)) {
+                match = false;
+            }
         }
 
-        if (raceBox.isSelected() && 
-            !cpu.getRace().toLowerCase().contains(currentAnswers.get(10).toLowerCase())) {
-            match = false;
+        // Race match
+        if (raceBox.isSelected()) {
+            String racePref = currentAnswers.get(10).toLowerCase();
+            if (!cpu.getRace().toLowerCase().contains(racePref)) {
+                match = false;
+            }
         }
 
-        if (williamBox.isSelected() && 
-            !cpu.getName().toLowerCase().contains("william stanton")) {
-            match = false;
+        // Special Easter egg
+        if (williamBox.isSelected()) {
+            if (!cpu.getName().toLowerCase().contains("william stanton")) {
+                match = false;
+            }
         }
 
         if (match) {
