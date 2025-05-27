@@ -272,31 +272,24 @@ leftTopPanel.add(showFavoritesButton);
             }
         }
 
-        // Hair color match
         if (hairBox.isSelected()) {
             String hairPref = currentAnswers.get(9).toLowerCase();
             if (!cpu.getHairColor().toLowerCase().contains(hairPref)) {
                 match = false;
             }
         }
-
-        // Eye color match
         if (eyesBox.isSelected()) {
             String eyePref = currentAnswers.get(8).toLowerCase();
             if (!cpu.getEyeColor().toLowerCase().contains(eyePref)) {
                 match = false;
             }
         }
-
-        // Race match
         if (raceBox.isSelected()) {
             String racePref = currentAnswers.get(10).toLowerCase();
             if (!cpu.getRace().toLowerCase().contains(racePref)) {
                 match = false;
             }
         }
-
-        // Special Easter egg
         if (williamBox.isSelected()) {
             if (!cpu.getName().toLowerCase().contains("william stanton")) {
                 match = false;
