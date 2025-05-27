@@ -1,6 +1,6 @@
-import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class Main extends JFrame implements ActionListener {
@@ -336,20 +336,27 @@ rightTopPanel.repaint();
                 "Gender: " + currentAnswers.get(5) + "\n" +
                 "Bio: " + currentAnswers.get(7) + "\n");
         });
-        
     }
 
     private void addDefaultCPUs() {
-        people.addCPU(new CPU("Emily Jones", 21, "softball", "stanford", "5'5", true, "i hate kaden choi", "images/heart.png", "brown", "brown", "white & asian"));
-        people.addCPU(new CPU("Kiana Choi", 18, "dance", "san carlos", "4’11", true, "inner beauty is great but so is a good tan", "images/heart.png", "brown", "brown", "asian"));
-        people.addCPU(new CPU("Sofie Budman", 16, "basketball", "redwood shores", "5'6", true, "put down whatever", "images/heart.png", "brown", "brown", "white & asian"));
+        people.addCPU(new CPU("Emily Jones", 21, "softball", "stanford", "5'5", true, "i hate kaden choi", "images/ej18.png", "brown", "brown", "white & asian"));
+        people.addCPU(new CPU("Kiana Choi", 18, "dance", "san carlos", "4’11", true, "inner beauty is great but so is a good tan", "images/kiana.jpg", "brown", "brown", "asian"));
+        people.addCPU(new CPU("Sofie Budman", 16, "basketball", "redwood shores", "5'6", true, "put down whatever", "images/sofie.jpg", "brown", "brown", "white & asian"));
         people.addCPU(new CPU("Chloe Smith", 18, "cheerleading", "near you", "5’8", true, "looking for hot females near me", "images/heart.png", "blonde", "blue", "white"));
         people.addCPU(new CPU("Michael Brown", 5, "watching cocomelon", "belmont", "4’2", false, "i stole my mommy's ipad", "images/heart.png", "brown", "green", "white"));
-        people.addCPU(new CPU("Eileen Gu", 21, "skiing, modeling", "stanford", "5’9", true, "??", "images/heart.png", "brown", "brown", "white & asian"));
-        people.addCPU(new CPU("Mikael Brunshteyn", 16, "basketball", "carlmont", "6'7", false, "too early", "images/heart.png", "light brown", "brown", "white"));
-        people.addCPU(new CPU("William Stanton", 17, "soccer", "carlmont", "6'2", false, "i love men", "images/heart.png", "light brown", "brown", "white"));
+        people.addCPU(new CPU("Eileen Gu", 21, "skiing, modeling", "stanford", "5’9", true, "??", "images/eileengu.jpg", "brown", "brown", "white & asian"));
+        people.addCPU(new CPU("Mikael Brunshteyn", 16, "basketball", "carlmont", "6'7", false, "I like em young", "images/mikael.jpg", "light brown", "brown", "white"));
+        people.addCPU(new CPU("William Stanton", 17, "soccer", "carlmont", "6'2", false, "i love men", "images/will.png", "brown", "green", "white"));
+        people.addCPU(new CPU("Ben Brown", 17, "skiing and golf and cubing", "Carlmont", "5'8", false, "looking for OS", "images/heart.png", "blond", "blue", "white"));
+        people.addCPU(new CPU("Nico Golomb", 17, "Soccer and Reina", "San Carlos", "5'8", false, "Anyone looking for a good time!", "images/heart.png", "black", "brown", "white"));
+        people.addCPU(new CPU("Kaia Baker-Malone", 16, "cheerleading and skiing", "San Carlos", "5'5", true, "I broke my back, looking for someone to break it again", "images/kaia.png", "brown", "brown", "white"));
+        people.addCPU(new CPU("Helen Boone", 17, "Dance", "San Carlos", "5'6", true, "About to move not looking for anything serious", "images/heart.png", "blonde", "blue", "white"));
+        people.addCPU(new CPU("Sophia Klar", 17, "lacrosse, jiujitsu", "San Carlos", "5'5", true, "I can wrestle on the mat and in bed", "images/sophiak.jpg", "brown", "brown", "white"));
+        people.addCPU(new CPU("Jazlynn Chuo", 18, "Cello, baking and photography", "Redwood Shores", "5'3", true, "I'm good with my fingers", "images/jazlynn.jpg", "brown", "brown", "asian"));
+        people.addCPU(new CPU("Suni Lee", 22, "gymnastics and winning the Olympics", "Minnesota", "5'0", true, "Gymnastics isn't just my sport, it's my art in motion", "images/suni.jpg", "black", "brown", "asian"));
+        people.addCPU(new CPU("Sydney Agudong", 24, "Actress from Lilo and Stitch", "Hawaii", "5'4", true, "You can be the Lilo to my Stitch", "images/sydau.jpg", "brown", "brown", "Hawaiian"));
+        people.addCPU(new CPU("Sara Ho", 17, "Chatting up Aiden Paz", "San Mateo", "5'2", true, "xx", "images/heart.png", "brown", "brown", "asian"));
     }
-
     private void showFavoritesDialog() 
     {
     if (favorites.isEmpty()) {
