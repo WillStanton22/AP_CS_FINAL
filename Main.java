@@ -6,9 +6,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Properties;
-import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
@@ -116,6 +113,32 @@ public class Main extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+     private void showFavoritesChatSelector() {
+        if (favorites.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "You have no favorites yet.", "Favorites", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        String[] names = favorites.stream().map(CPU::getName).toArray(String[]::new);
+
+        String choice = (String) JOptionPane.showInputDialog(
+                this,
+                "Select a favorite to chat with:",
+                "Chat with Favorite",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                names,
+                names[0]
+        );
+        if (choice != null) {
+            for (CPU cpu : favorites) {
+                if (cpu.getName().equals(choice)) {
+                    openChatWindow(cpu);
+                    break;
+                }
+            }
+        }
+    }
+
     private void openChatWindow(CPU cpu) {
         ChatWindow chatWindow = new ChatWindow(cpu);
         chatWindow.setVisible(true);
@@ -212,14 +235,28 @@ public class Main extends JFrame implements ActionListener {
         cpuPanel.revalidate();
         cpuPanel.repaint();
     }
+    public static Image getScaledImagePreserveRatio(Image srcImg, int maxWidth, int maxHeight) {
+    int srcWidth = srcImg.getWidth(null);
+    int srcHeight = srcImg.getHeight(null);
+
+    double widthRatio = (double) maxWidth / srcWidth;
+    double heightRatio = (double) maxHeight / srcHeight;
+    double scale = Math.min(widthRatio, heightRatio);
+
+    int newWidth = (int) (srcWidth * scale);
+    int newHeight = (int) (srcHeight * scale);
+
+    return srcImg.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+}
 
     private JButton createCPUButton(CPU cpu) {
         ImageIcon icon = new ImageIcon(cpu.getImagePath());
-        Image scaledImage = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
-        JButton button = new JButton(cpu.getName(), new ImageIcon(scaledImage));
+Image scaledImage = getScaledImagePreserveRatio(icon.getImage(), 140, 140);
+JButton button = new JButton(cpu.getName(), new ImageIcon(scaledImage));
+// ... rest unchanged
         button.setHorizontalTextPosition(SwingConstants.CENTER);
         button.setVerticalTextPosition(SwingConstants.BOTTOM);
-        button.setPreferredSize(new Dimension(120, 120));
+        button.setPreferredSize(new Dimension(160, 170));
 
         button.addActionListener(e -> {
             String message = "Name: " + cpu.getName() + "\n" +
@@ -255,7 +292,6 @@ public class Main extends JFrame implements ActionListener {
                 } else {
                     JOptionPane.showMessageDialog(this, "Already in favorites.", "Favorites", JOptionPane.INFORMATION_MESSAGE);
                 }
-                openChatWindow(cpu);
             });
 
             panel.add(heartButton, BorderLayout.SOUTH);
@@ -366,10 +402,10 @@ public class Main extends JFrame implements ActionListener {
         people.addCPU(new CPU("Michael Brown", 5, "watching cocomelon", "belmont", "4’2", false, "i stole my mommy's ipad", "images/heart.png", "brown", "green", "white"));
         people.addCPU(new CPU("Eileen Gu", 21, "skiing, modeling", "stanford", "5’9", true, "??", "images/eileengu.jpg", "brown", "brown", "white & asian"));
         people.addCPU(new CPU("Mikael Brunshteyn", 16, "basketball", "carlmont", "6'7", false, "I like em young", "images/mikael.jpg", "light brown", "brown", "white"));
-        people.addCPU(new CPU("William Stanton", 17, "soccer", "carlmont", "6'2", false, "i love men", "images/will.png", "brown", "green", "white"));
+        people.addCPU(new CPU("William Stanton", 17, "soccer", "carlmont", "6'2", false, "i love men", "images/heart.png", "brown", "green", "white"));
         people.addCPU(new CPU("Ben Brown", 17, "skiing and golf and cubing", "Carlmont", "5'8", false, "looking for OS", "images/heart.png", "blond", "blue", "white"));
         people.addCPU(new CPU("Nico Golomb", 17, "Soccer and Reina", "San Carlos", "5'8", false, "Anyone looking for a good time!", "images/heart.png", "black", "brown", "white"));
-        people.addCPU(new CPU("Kaia Baker-Malone", 16, "cheerleading and skiing", "San Carlos", "5'5", true, "I broke my back, looking for someone to break it again", "images/kaia.png", "brown", "brown", "white"));
+        people.addCPU(new CPU("Kaia Baker-Malone", 16, "cheerleading and skiing", "San Carlos", "5'5", true, "I broke my back, looking for someone to break it again", "images/kaia.jpg", "brown", "brown", "white"));
         people.addCPU(new CPU("Helen Boone", 17, "Dance", "San Carlos", "5'6", true, "About to move not looking for anything serious", "images/heart.png", "blonde", "blue", "white"));
         people.addCPU(new CPU("Sophia Klar", 17, "lacrosse, jiujitsu", "San Carlos", "5'5", true, "I can wrestle on the mat and in bed", "images/sophiak.jpg", "brown", "brown", "white"));
         people.addCPU(new CPU("Jazlynn Chuo", 18, "Cello, baking and photography", "Redwood Shores", "5'3", true, "I'm good with my fingers", "images/jazlynn.jpg", "brown", "brown", "asian"));
@@ -380,18 +416,39 @@ public class Main extends JFrame implements ActionListener {
     }
 
     private void showFavoritesDialog() {
-        if (favorites.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "You have no favorites yet.", "Favorites", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-
-        StringBuilder sb = new StringBuilder("Favorite Profiles:\n\n");
-        for (CPU cpu : favorites) {
-            sb.append(cpu.getName()).append("\n");
-        }
-
-        JOptionPane.showMessageDialog(this, sb.toString(), "Favorites", JOptionPane.INFORMATION_MESSAGE);
+    if (favorites.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "You have no favorites yet.", "Favorites", JOptionPane.INFORMATION_MESSAGE);
+        return;
     }
+
+    // Build favorites list message
+    StringBuilder sb = new StringBuilder("Favorite Profiles:\n\n");
+    for (CPU cpu : favorites) {
+        sb.append(cpu.getName()).append("\n");
+    }
+    // Show favorites (plain list)
+    JOptionPane.showMessageDialog(this, sb.toString(), "Favorites", JOptionPane.INFORMATION_MESSAGE);
+
+    // NEW: Prompt to chat with a favorite
+    String[] names = favorites.stream().map(CPU::getName).toArray(String[]::new);
+    String choice = (String) JOptionPane.showInputDialog(
+            this,
+            "Chat with one of your favorites?",
+            "Chat with Favorite",
+            JOptionPane.PLAIN_MESSAGE,
+            null,
+            names,
+            names[0]
+    );
+    if (choice != null) {
+        for (CPU cpu : favorites) {
+            if (cpu.getName().equals(choice)) {
+                openChatWindow(cpu);
+                break;
+            }
+        }
+    }
+}
 
     public static void main(String[] args) {
         try {
