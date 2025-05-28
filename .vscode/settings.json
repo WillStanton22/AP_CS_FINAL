@@ -1,0 +1,10 @@
+{
+    "java.project.sourcePaths": [
+        "."
+    ],
+    "java.project.referencedLibraries": [
+        "lib\\gson-2.10.1-javadoc.jar",
+        "c:\\Users\\sara\\OneDrive\\Documentos\\GitHub\\AP_CS_FINAL\\lib\\flatlaf-3.6.jar",
+        "c:\\Users\\sara\\OneDrive\\Documentos\\GitHub\\AP_CS_FINAL\\lib\\gson-2.10.1-javadoc.jar"
+    ]
+}

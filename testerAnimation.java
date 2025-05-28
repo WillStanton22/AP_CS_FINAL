@@ -3,12 +3,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class testerAnimation extends JPanel implements ActionListener {
+class TesterAnimation extends JPanel implements ActionListener {
     private int x = 0;
     private int y = 0;
     private Timer timer;
 
-    public testerAnimation() {
+    public TesterAnimation() {
         timer = new Timer(10, this); // calls action performed every 10 milliseconds
         timer.start();
     }
@@ -35,7 +35,7 @@ class testerAnimation extends JPanel implements ActionListener {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Animation Example");
-        AnimationExample panel = new AnimationExample();
+        TesterAnimation panel = new TesterAnimation();
         frame.add(panel);
         frame.setSize(400, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

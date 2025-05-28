@@ -1,0 +1,147 @@
+import javax.swing.*;
+import java.awt.*;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.Gson;
+
+public class ChatWindow extends JFrame {
+    private final CPU cpu;
+    private final JTextArea chatArea;
+    private final JTextField inputField;
+    private final JButton sendButton;
+
+    public ChatWindow(CPU cpu) {
+        this.cpu = cpu;
+
+        setTitle("Chat with " + cpu.getName());
+        setSize(400, 500);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        chatArea = new JTextArea();
+        chatArea.setEditable(false);
+        chatArea.setLineWrap(true);
+        chatArea.setWrapStyleWord(true);
+
+        inputField = new JTextField();
+        sendButton = new JButton("Send");
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JScrollPane(chatArea), BorderLayout.CENTER);
+
+        JPanel inputPanel = new JPanel(new BorderLayout());
+        inputPanel.add(inputField, BorderLayout.CENTER);
+        inputPanel.add(sendButton, BorderLayout.EAST);
+
+        panel.add(inputPanel, BorderLayout.SOUTH);
+
+        sendButton.addActionListener(e -> sendMessage());
+
+        // Allow pressing Enter in input field to send message
+        inputField.addActionListener(e -> sendMessage());
+
+        add(panel);
+        inputField.requestFocus();
+    }
+
+    private void sendMessage() {
+    String message = inputField.getText().trim();
+    if (message.isEmpty()) return;
+
+    chatArea.append("You: " + message + "\n");
+    inputField.setText("");
+    inputField.setEnabled(false);
+    sendButton.setEnabled(false);
+
+    new Thread(() -> {
+    try {
+        System.out.println("DEBUG: Sending message to API: " + message);
+        String reply = getChatGPTResponse(message, cpu);
+        System.out.println("DEBUG: reply from API: " + reply);
+        SwingUtilities.invokeLater(() -> {
+            chatArea.append(cpu.getName() + ": " + reply + "\n");
+            inputField.setEnabled(true);
+            sendButton.setEnabled(true);
+            inputField.requestFocus();
+        });
+    } catch (IOException ex) {
+        ex.printStackTrace();
+        SwingUtilities.invokeLater(() -> {
+            chatArea.append(cpu.getName() + ": Sorry, I can't talk right now.\n");
+            inputField.setEnabled(true);
+            sendButton.setEnabled(true);
+            inputField.requestFocus();
+        });
+    }
+}).start();
+
+}
+
+    }
+
+    public String getChatGPTResponse(String userMessage, CPU cpu) throws IOException {
+        String apiKey = "API KEY -- REPLACE"; // TODO: Replace with your actual OpenAI API key
+
+        URL url = new URL("https://api.openai.com/v1/chat/completions");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Authorization", "Bearer " + apiKey);
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setDoOutput(true);
+
+        // Build JSON request body with Gson
+        JsonObject systemMessage = new JsonObject();
+        systemMessage.addProperty("role", "system");
+        systemMessage.addProperty("content",
+                "You are a fun, flirty high school CPU named " + cpu.getName() +
+                ". Keep responses brief, casual, and personal.");
+
+        JsonObject userMessageObj = new JsonObject();
+        userMessageObj.addProperty("role", "user");
+        userMessageObj.addProperty("content", userMessage);
+
+        JsonArray messages = new JsonArray();
+        messages.add(systemMessage);
+        messages.add(userMessageObj);
+
+        JsonObject requestBody = new JsonObject();
+        requestBody.addProperty("model", "gpt-3.5-turbo");
+        requestBody.add("messages", messages);
+
+        String jsonInput = new Gson().toJson(requestBody);
+
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = jsonInput.getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = conn.getResponseCode();
+
+        InputStream inputStream = responseCode == 200 ? conn.getInputStream() : conn.getErrorStream();
+
+        StringBuilder response = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, "utf-8"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                response.append(line.trim());
+            }
+        }
+
+        if (responseCode != 200) {
+            System.err.println("OpenAI API returned HTTP " + responseCode);
+            System.err.println("Response: " + response);
+            throw new IOException("OpenAI API error: " + response);
+        }
+
+        JsonObject jsonObject = new Gson().fromJson(response.toString(), JsonObject.class);
+        JsonArray choices = jsonObject.getAsJsonArray("choices");
+        JsonObject message = choices.get(0).getAsJsonObject().getAsJsonObject("message");
+        String content = message.get("content").getAsString();
+
+        return content.trim();
+    }
+}

@@ -17,6 +17,10 @@ public class Main extends JFrame implements ActionListener {
     private JCheckBox femaleBox, hobbiesBox, locationBox, hairBox, eyesBox, raceBox, williamBox;
     private JButton toggleFilterButton;
     private int qCount = 0;
+    private void openChatWindow(CPU cpu) {
+    ChatWindow chatWindow = new ChatWindow(cpu);
+    chatWindow.setVisible(true);
+}
 
     private String[] questions = {
         "What's your name?", "How old are you?", "What is your hobby?",
@@ -37,10 +41,6 @@ public class Main extends JFrame implements ActionListener {
         setLayout(new BorderLayout());
 
         Font font = new Font("Segoe UI", Font.PLAIN, 16);
-
-        // Top Bar
-        proPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        add(proPanel, BorderLayout.NORTH);
 
         // Center panel for survey
         JPanel centerPanel = new JPanel(new GridBagLayout());
@@ -88,16 +88,15 @@ public class Main extends JFrame implements ActionListener {
         southPanel.add(headerPanel);
         southPanel.add(scrollPane);
         add(southPanel, BorderLayout.SOUTH);
-
-        // Create a wrapper panel with BorderLayout for the top bar
+// Create a wrapper panel with BorderLayout for the top bar once
 proPanel = new JPanel(new BorderLayout());
 add(proPanel, BorderLayout.NORTH);
 
-// Create the left and right sub-panels
+// Create left and right sub-panels
 JPanel leftTopPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 JPanel rightTopPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-// Add them to the main top bar
+// Add them to the main top bar panel
 proPanel.add(leftTopPanel, BorderLayout.WEST);
 proPanel.add(rightTopPanel, BorderLayout.EAST);
 
@@ -112,26 +111,19 @@ leftTopPanel.add(showFavoritesButton);
         setVisible(true);
     }
 
+    
+
     public void actionPerformed(ActionEvent e) {
     String input = textField.getText().trim();
     if (!input.isEmpty()) {
-        // Age validation for qCount == 1
         if (qCount == 1) {
-            try {
-                int age = Integer.parseInt(input);
-                if (age < 15) {
-                    JOptionPane.showMessageDialog(this, "Too young!", "Age Warning", JOptionPane.WARNING_MESSAGE);
-                    return; // Block progress
-                } else if (age > 20) {
-                    JOptionPane.showMessageDialog(this, "You're old!", "Age Warning", JOptionPane.WARNING_MESSAGE);
-                    return; // Block progress
-                }
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Please enter a valid number for age.", "Input Error", JOptionPane.ERROR_MESSAGE);
-                return; // Block progress
-            }
+            if (!validateAge(input)) return;
         }
-
+        if (qCount == 5) {
+            handleStep5(input);
+            return;
+        }
+        // Normal input handling
         currentAnswers.add(input);
         qCount++;
         textField.setText("");
@@ -141,6 +133,71 @@ leftTopPanel.add(showFavoritesButton);
             finalizeProfile();
         }
     }
+}
+
+private boolean validateAge(String input) {
+    try {
+        int age = Integer.parseInt(input);
+        if (age < 15) {
+            JOptionPane.showMessageDialog(this, "Too young!", "Age Warning", JOptionPane.WARNING_MESSAGE);
+            return false;
+        } else if (age > 20) {
+            JOptionPane.showMessageDialog(this, "You're old!", "Age Warning", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this, "Please enter a valid number for age.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+    return true;
+}
+
+private void handleStep5(String input) {
+    // Your specific logic for step 5 here
+    // For example, let's just store the input and advance question count
+    currentAnswers.add(input);
+    qCount++;
+    textField.setText("");
+    if (qCount < questions.length) {
+        label.setText(questions[qCount]);
+    } else {
+        finalizeProfile();
+    }
+}
+
+class ChatWindow extends JFrame {
+    public ChatWindow(CPU cpu) {
+        setTitle("Chat with " + cpu.getName());
+        setSize(400, 500);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        JTextArea chatArea = new JTextArea();
+        chatArea.setEditable(false);
+
+        JTextField inputField = new JTextField();
+        JButton sendButton = new JButton("Send");
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JScrollPane(chatArea), BorderLayout.CENTER);
+
+        JPanel inputPanel = new JPanel(new BorderLayout());
+        inputPanel.add(inputField, BorderLayout.CENTER);
+        inputPanel.add(sendButton, BorderLayout.EAST);
+
+        panel.add(inputPanel, BorderLayout.SOUTH);
+
+        sendButton.addActionListener(e -> {
+            String message = inputField.getText().trim();
+            if (!message.isEmpty()) {
+                chatArea.append("You: " + message + "\n");
+                inputField.setText("");
+            }
+        });
+
+        add(panel);
+    }
+    
 }
 
 
@@ -226,13 +283,18 @@ leftTopPanel.add(showFavoritesButton);
         heartButton.setToolTipText("Add to Favorites");
 
         heartButton.addActionListener(ev -> {
-            if (!favorites.contains(cpu)) {
-                favorites.add(cpu);
-                JOptionPane.showMessageDialog(this, cpu.getName() + " has been added to your favorites!", "Favorites", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "Already in favorites.", "Favorites", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
+    if (!favorites.contains(cpu)) {
+        favorites.add(cpu);
+        JOptionPane.showMessageDialog(this, cpu.getName() + " has been added to your favorites!", "Favorites", JOptionPane.INFORMATION_MESSAGE);
+    } else {
+        JOptionPane.showMessageDialog(this, "Already in favorites.", "Favorites", JOptionPane.INFORMATION_MESSAGE);
+    }
+    openChatWindow(cpu);
+});
+
+
+
+
 
         panel.add(heartButton, BorderLayout.SOUTH);
         JOptionPane.showMessageDialog(this, panel, "Profile Details", JOptionPane.PLAIN_MESSAGE);
@@ -329,7 +391,6 @@ rightTopPanel.repaint();
             JOptionPane.showMessageDialog(this,
                 "Name: " + currentAnswers.get(0) + "\n" +
                 "Age: " + currentAnswers.get(1) + "\n" +
-                "Age: " + currentAnswers.get(1) + "\n" +
                 "Hobbies: " + currentAnswers.get(2) + "\n" +
                 "Location: " + currentAnswers.get(3) + "\n" +
                 "Height: " + currentAnswers.get(4) + "\n" +
@@ -356,7 +417,9 @@ rightTopPanel.repaint();
         people.addCPU(new CPU("Suni Lee", 22, "gymnastics and winning the Olympics", "Minnesota", "5'0", true, "Gymnastics isn't just my sport, it's my art in motion", "images/suni.jpg", "black", "brown", "asian"));
         people.addCPU(new CPU("Sydney Agudong", 24, "Actress from Lilo and Stitch", "Hawaii", "5'4", true, "You can be the Lilo to my Stitch", "images/sydau.jpg", "brown", "brown", "Hawaiian"));
         people.addCPU(new CPU("Sara Ho", 17, "Chatting up Aiden Paz", "San Mateo", "5'2", true, "xx", "images/heart.png", "brown", "brown", "asian"));
+        people.addCPU(new CPU("Justine Desmidt :)", 16, "being cute", "belmont", "10'0", true, "i'm desperate tbh", "images/justine.jpeg", "purple", "green", "white"));
     }
+
     private void showFavoritesDialog() 
     {
     if (favorites.isEmpty()) {
@@ -373,7 +436,9 @@ rightTopPanel.repaint();
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    {
+        
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {}
@@ -429,3 +494,10 @@ class People {
     public void addCPU(CPU c) { cpuList.add(c); }
     public ArrayList<CPU> getCPUs() { return cpuList; }
 }
+
+
+
+
+
+
+
