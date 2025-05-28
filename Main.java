@@ -6,6 +6,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Properties;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
@@ -550,7 +553,7 @@ class ChatWindow extends JFrame {
 
     public String getChatGPTResponse(String userMessage, CPU cpu) throws IOException {
         Properties props = new Properties();
-        try (InputStream input = new FileInputStream("config.properties")) {
+        try (InputStream input = new FileInputStream("config.properties");) {
         props.load(input);
 }
         String apiKey = props.getProperty("OPENAI_API_KEY");
