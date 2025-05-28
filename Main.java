@@ -342,7 +342,7 @@ rightTopPanel.repaint();
         people.addCPU(new CPU("Emily Jones", 21, "softball", "stanford", "5'5", true, "i hate kaden choi", "images/ej18.png", "brown", "brown", "white & asian"));
         people.addCPU(new CPU("Kiana Choi", 18, "dance", "san carlos", "4’11", true, "inner beauty is great but so is a good tan", "images/kiana.jpg", "brown", "brown", "asian"));
         people.addCPU(new CPU("Sofie Budman", 16, "basketball", "redwood shores", "5'6", true, "put down whatever", "images/sofie.jpg", "brown", "brown", "white & asian"));
-        people.addCPU(new CPU("Chloe Smith", 18, "cheerleading", "near you", "5’8", true, "looking for hot females near me", "images/heart.png", "blonde", "blue", "white"));
+        people.addCPU(new CPU("Chloe Smith", 18, "cheerleading", "near you", "5’8", true, "looking for hot females near me", "images/catfish.jpeg", "blonde", "blue", "white"));
         people.addCPU(new CPU("Michael Brown", 5, "watching cocomelon", "belmont", "4’2", false, "i stole my mommy's ipad", "images/heart.png", "brown", "green", "white"));
         people.addCPU(new CPU("Eileen Gu", 21, "skiing, modeling", "stanford", "5’9", true, "??", "images/eileengu.jpg", "brown", "brown", "white & asian"));
         people.addCPU(new CPU("Mikael Brunshteyn", 16, "basketball", "carlmont", "6'7", false, "I like em young", "images/mikael.jpg", "light brown", "brown", "white"));
