@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Properties;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
@@ -438,6 +439,7 @@ class CPU {
     public String getHairColor() { return hairColor; }
     public String getEyeColor() { return eyeColor; }
     public String getRace() { return race; }
+    
 }
 
 class People {
@@ -515,9 +517,46 @@ class ChatWindow extends JFrame {
         }).start();
     }
 
-    public String getChatGPTResponse(String userMessage, CPU cpu) throws IOException {
-        String apiKey = "replace!!"; // TODO: Replace with your actual OpenAI API key
+    public class PromptBuilder {
+    public static String buildCPUPersonalityPrompt(CPU cpu) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("You are a").append(cpu.isFemale() ? "female" : "male");
 
+        // Add age
+        sb.append(", age ").append(cpu.getAge());
+
+        // Add hobbies
+        if (cpu.getHobbies() != null && !cpu.getHobbies().isEmpty()) {
+            sb.append(", enjoys ").append(cpu.getHobbies());
+        }
+
+        // Add location
+        if (cpu.getLocation() != null && !cpu.getLocation().isEmpty()) {
+            sb.append(", lives in ").append(cpu.getLocation());
+        }
+
+        // Add appearance
+        sb.append(". Hair: ").append(cpu.getHairColor());
+        sb.append(". Eyes: ").append(cpu.getEyeColor());
+        sb.append(". Race: ").append(cpu.getRace());
+        sb.append(". Your name is ").append(cpu.getName()).append(".");
+        sb.append("Here is an example of your personality style (not meant to be factual, just inspiration for your vibe): ");
+        sb.append("\"").append(cpu.getBio()).append("\". ");
+        sb.append("Keep responses brief, casual, and personal.");
+
+        return sb.toString();
+    }
+}
+
+    public String getChatGPTResponse(String userMessage, CPU cpu) throws IOException {
+        Properties props = new Properties();
+        try (InputStream input = new FileInputStream("config.properties")) {
+        props.load(input);
+}
+        String apiKey = props.getProperty("OPENAI_API_KEY");
+        if (apiKey == null) {
+            throw new IllegalStateException("API key not set in config.properties");
+}
         URL url = new URL("https://api.openai.com/v1/chat/completions");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
@@ -528,9 +567,7 @@ class ChatWindow extends JFrame {
         // Build JSON request body with Gson
         JsonObject systemMessage = new JsonObject();
         systemMessage.addProperty("role", "system");
-        systemMessage.addProperty("content",
-                "You are a fun, flirty high school CPU named " + cpu.getName() +
-                ". Keep responses brief, casual, and personal.");
+        systemMessage.addProperty("content", PromptBuilder.buildCPUPersonalityPrompt(cpu));
 
         JsonObject userMessageObj = new JsonObject();
         userMessageObj.addProperty("role", "user");
@@ -541,7 +578,7 @@ class ChatWindow extends JFrame {
         messages.add(userMessageObj);
 
         JsonObject requestBody = new JsonObject();
-        requestBody.addProperty("model", "gpt-3.5-turbo");
+        requestBody.addProperty("model", "gpt-4.1-mini");
         requestBody.add("messages", messages);
 
         String jsonInput = new Gson().toJson(requestBody);
