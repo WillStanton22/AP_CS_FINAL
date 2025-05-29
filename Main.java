@@ -402,7 +402,7 @@ JButton button = new JButton(cpu.getName(), new ImageIcon(scaledImage));
         people.addCPU(new CPU("Michael Brown", 5, "watching cocomelon", "belmont", "4’2", false, "i stole my mommy's ipad", "images/heart.png", "brown", "green", "white"));
         people.addCPU(new CPU("Eileen Gu", 21, "skiing, modeling", "stanford", "5’9", true, "??", "images/eileengu.jpg", "brown", "brown", "white & asian"));
         people.addCPU(new CPU("Mikael Brunshteyn", 16, "basketball", "carlmont", "6'7", false, "I like em young", "images/mikael.jpg", "light brown", "brown", "white"));
-        people.addCPU(new CPU("William Stanton", 17, "soccer", "carlmont", "6'2", false, "i love men", "images/heart.png", "brown", "green", "white"));
+        people.addCPU(new CPU("William Stanton", 17, "soccer", "carlmont", "6'2", false, "i love men", "images/will.png", "brown", "green", "white"));
         people.addCPU(new CPU("Ben Brown", 17, "skiing and golf and cubing", "Carlmont", "5'8", false, "looking for OS", "images/heart.png", "blond", "blue", "white"));
         people.addCPU(new CPU("Nico Golomb", 17, "Soccer and Reina", "San Carlos", "5'8", false, "Anyone looking for a good time!", "images/heart.png", "black", "brown", "white"));
         people.addCPU(new CPU("Kaia Baker-Malone", 16, "cheerleading and skiing", "San Carlos", "5'5", true, "I broke my back, looking for someone to break it again", "images/kaia.jpg", "brown", "brown", "white"));
@@ -413,9 +413,11 @@ JButton button = new JButton(cpu.getName(), new ImageIcon(scaledImage));
         people.addCPU(new CPU("Sydney Agudong", 24, "Actress from Lilo and Stitch", "Hawaii", "5'4", true, "You can be the Lilo to my Stitch", "images/sydau.jpg", "brown", "brown", "Hawaiian"));
         people.addCPU(new CPU("Sara Ho", 17, "Chatting up Aiden Paz", "San Mateo", "5'2", true, "xx", "images/heart.png", "brown", "brown", "asian"));
         people.addCPU(new CPU("Justine Desmidt :)", 16, "being cute", "belmont", "10'0", true, "i'm desperate tbh", "images/justine.jpeg", "purple", "green", "white"));
-        people.addCPU(new CPU("Lily Hinde", 16, "Gardening, going to the beach", "belmont", "5'4", true, "might steal your heart, will steal your fries", "image/lily.png", "brown", "brown", "white and asian"));
+        people.addCPU(new CPU("Lily Hinde", 16, "Gardening, going to the beach", "belmont", "5'4", true, "might steal your heart, will steal your fries", "images/lily.jpg", "brown", "brown", "white and asian"));
         people.addCPU(new CPU("Zoey Tan", 17, "art", "belmont", "5'1", true, "i love the smiths!", "images/zoey.png", "brown", "brown", "white and asian"));
-        people.addCPU(new CPU("Heidi Poole", 17, "singing and reading", "belmont", "5'7", true, "draw me like one of your french girls jack", "images/heidi.png", "red", "brown", "white"));
+        people.addCPU(new CPU("Heidi Poole", 17, "singing and reading", "belmont", "5'7", true, "draw me like one of your french girls jack", "images/heidi.jpg", "red", "brown", "white"));
+        people.addCPU(new CPU("Scarlett Buchanan", 17, "Scrolling through steam store, and thinking about Kiana Chen", "Belmont", "5'4", true, "Looking for a girl named Kiana Chen who I fell in love with 14 years ago today", "images/heart.png", "blonde", "brown", "white"));
+        people.addCPU(new CPU("Reina Submaranian", 17, "Pete's, Nico, Asha, Musical Theater", "Redwood Shores", "5'4", true, "She broke up with me don't hmu", "images/heart.png", "black", "brown", "Indian"));
 
     }
 
