@@ -413,6 +413,10 @@ JButton button = new JButton(cpu.getName(), new ImageIcon(scaledImage));
         people.addCPU(new CPU("Sydney Agudong", 24, "Actress from Lilo and Stitch", "Hawaii", "5'4", true, "You can be the Lilo to my Stitch", "images/sydau.jpg", "brown", "brown", "Hawaiian"));
         people.addCPU(new CPU("Sara Ho", 17, "Chatting up Aiden Paz", "San Mateo", "5'2", true, "xx", "images/heart.png", "brown", "brown", "asian"));
         people.addCPU(new CPU("Justine Desmidt :)", 16, "being cute", "belmont", "10'0", true, "i'm desperate tbh", "images/justine.jpeg", "purple", "green", "white"));
+        people.addCPU(new CPU("Lily Hinde", 16, "Gardening, going to the beach", "belmont", "5'4", true, "might steal your heart, will steal your fries", "image/lily.png", "brown", "brown", "white and asian"));
+        people.addCPU(new CPU("Zoey Tan", 17, "art", "belmont", "5'1", true, "i love the smiths!", "images/zoey.png", "brown", "brown", "white and asian"));
+        people.addCPU(new CPU("Heidi Poole", 17, "singing and reading", "belmont", "5'7", true, "draw me like one of your french girls jack", "images/heidi.png", "red", "brown", "white"));
+
     }
 
     private void showFavoritesDialog() {
