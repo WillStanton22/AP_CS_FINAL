@@ -11,6 +11,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
 import com.google.gson.Gson;
 
+
+
 public class Main extends JFrame implements ActionListener {
     private JTextField textField;
     private JButton button;
@@ -36,6 +38,7 @@ public class Main extends JFrame implements ActionListener {
         addDefaultCPUs();
         setupUI();
     }
+    
 
     private void setupUI() {
         setTitle("Profile Survey");
@@ -109,7 +112,6 @@ public class Main extends JFrame implements ActionListener {
         showFavoritesButton.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         showFavoritesButton.addActionListener(e -> showFavoritesDialog());
         leftTopPanel.add(showFavoritesButton);
-
         setVisible(true);
     }
 
@@ -138,6 +140,7 @@ public class Main extends JFrame implements ActionListener {
             }
         }
     }
+    
 
     private void openChatWindow(CPU cpu) {
         ChatWindow chatWindow = new ChatWindow(cpu);
@@ -230,11 +233,14 @@ public class Main extends JFrame implements ActionListener {
     private void showProfileButtons() {
         cpuPanel.removeAll();
         for (CPU cpu : people.getCPUs()) {
-            cpuPanel.add(createCPUButton(cpu));
-        }
+    JButton cpuButton = createCPUButton(cpu);
+    JPanel card = ChatWindow.createTinderCard(cpuButton); // or Main.createTinderCard if you move it
+    cpuPanel.add(card);
+}
         cpuPanel.revalidate();
         cpuPanel.repaint();
     }
+    
     public static Image getScaledImagePreserveRatio(Image srcImg, int maxWidth, int maxHeight) {
     int srcWidth = srcImg.getWidth(null);
     int srcHeight = srcImg.getHeight(null);
@@ -250,6 +256,14 @@ public class Main extends JFrame implements ActionListener {
 }
 
     private JButton createCPUButton(CPU cpu) {
+        button.setBackground(new Color(255,255,255,220));
+        button.setOpaque(true);
+        button.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(252, 70, 93), 2, true),
+        
+        BorderFactory.createEmptyBorder(8,8,8,8)
+));
+
         ImageIcon icon = new ImageIcon(cpu.getImagePath());
 Image scaledImage = getScaledImagePreserveRatio(icon.getImage(), 140, 140);
 JButton button = new JButton(cpu.getName(), new ImageIcon(scaledImage));
@@ -397,7 +411,7 @@ JButton button = new JButton(cpu.getName(), new ImageIcon(scaledImage));
     private void addDefaultCPUs() {
         people.addCPU(new CPU("Emily Jones", 21, "softball", "stanford", "5'5", true, "i hate kaden choi", "images/ej18.png", "brown", "brown", "white & asian"));
         people.addCPU(new CPU("Kiana Choi", 18, "dance", "san carlos", "4’11", true, "inner beauty is great but so is a good tan", "images/kiana.jpg", "brown", "brown", "asian"));
-        people.addCPU(new CPU("Sofie Budman", 16, "basketball", "redwood shores", "5'6", true, "put down whatever", "images/sofie.jpg", "brown", "brown", "white & asian"));
+        people.addCPU(new CPU("Sofie Budman", 16, "basketball", "redwood shores", "5'6", true, "Loves girls who code", "images/sofie.jpg", "brown", "brown", "white & asian"));
         people.addCPU(new CPU("Chloe Smith", 18, "cheerleading", "near you", "5’8", true, "looking for hot females near me", "images/catfish.jpeg", "blonde", "blue", "white"));
         people.addCPU(new CPU("Michael Brown", 5, "watching cocomelon", "belmont", "4’2", false, "i stole my mommy's ipad", "images/heart.png", "brown", "green", "white"));
         people.addCPU(new CPU("Eileen Gu", 21, "skiing, modeling", "stanford", "5’9", true, "??", "images/eileengu.jpg", "brown", "brown", "white & asian"));
@@ -411,10 +425,10 @@ JButton button = new JButton(cpu.getName(), new ImageIcon(scaledImage));
         people.addCPU(new CPU("Jazlynn Chuo", 18, "Cello, baking and photography", "Redwood Shores", "5'3", true, "I'm good with my fingers", "images/jazlynn.jpg", "brown", "brown", "asian"));
         people.addCPU(new CPU("Suni Lee", 22, "gymnastics and winning the Olympics", "Minnesota", "5'0", true, "Gymnastics isn't just my sport, it's my art in motion", "images/suni.jpg", "black", "brown", "asian"));
         people.addCPU(new CPU("Sydney Agudong", 24, "Actress from Lilo and Stitch", "Hawaii", "5'4", true, "You can be the Lilo to my Stitch", "images/sydau.jpg", "brown", "brown", "Hawaiian"));
-        people.addCPU(new CPU("Sara Ho", 17, "Chatting up Aiden Paz", "San Mateo", "5'2", true, "xx", "images/heart.png", "brown", "brown", "asian"));
+        people.addCPU(new CPU("Sara Ho", 17, "Chatting up Aiden Paz", "San Mateo", "5'2", true, "if you're into ", "images/heart.png", "brown", "brown", "asian"));
         people.addCPU(new CPU("Justine Desmidt :)", 16, "being cute", "belmont", "10'0", true, "i'm desperate tbh", "images/justine.jpeg", "purple", "green", "white"));
         people.addCPU(new CPU("Lily Hinde", 16, "Gardening, going to the beach", "belmont", "5'4", true, "might steal your heart, will steal your fries", "images/lily.jpg", "brown", "brown", "white and asian"));
-        people.addCPU(new CPU("Zoey Tan", 17, "art", "belmont", "5'1", true, "i love the smiths!", "images/zoey.png", "brown", "brown", "white and asian"));
+        people.addCPU(new CPU("Zoey Tan", 17, "art", "belmont", "5'1", true, "i love the smiths!", "images/zoey.jpg", "brown", "brown", "white and asian"));
         people.addCPU(new CPU("Heidi Poole", 17, "singing and reading", "belmont", "5'7", true, "draw me like one of your french girls jack", "images/heidi.jpg", "red", "brown", "white"));
         people.addCPU(new CPU("Scarlett Buchanan", 17, "Scrolling through steam store, and thinking about Kiana Chen", "Belmont", "5'4", true, "Looking for a girl named Kiana Chen who I fell in love with 14 years ago today", "images/heart.png", "blonde", "brown", "white"));
         people.addCPU(new CPU("Reina Submaranian", 17, "Pete's, Nico, Asha, Musical Theater", "Redwood Shores", "5'4", true, "She broke up with me don't hmu", "images/heart.png", "black", "brown", "Indian"));
@@ -679,4 +693,41 @@ class ChatWindow extends JFrame {
 
         return content.trim();
     }
+   
+
+    static JPanel createTinderCard(JComponent content) {
+       JPanel cardPanel = new JPanel(new BorderLayout()) {
+           @Override
+           protected void paintComponent(Graphics g) {
+               Graphics2D g2 = (Graphics2D) g.create();
+               g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+               // Shadow
+               g2.setColor(new Color(0, 0, 0, 40));
+               g2.fillRoundRect(6, 8, getWidth() - 12, getHeight() - 12, 40, 40);
+               // Card
+               g2.setColor(Color.BLUE);
+               g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+               g2.dispose();
+           }
+       };
+       cardPanel.setOpaque(false);
+       cardPanel.setBorder(BorderFactory.createEmptyBorder(24, 24, 24, 24));
+       cardPanel.add(content, BorderLayout.CENTER);
+       return cardPanel;
+   }
+
+
+    static JButton createTinderButton(String emoji, Color color, String tooltip) {
+       JButton btn = new JButton(emoji);
+       btn.setFont(new Font("Segoe UI", Font.BOLD, 36));
+       btn.setForeground(color);
+       btn.setContentAreaFilled(false);
+       btn.setBorderPainted(false);
+       btn.setFocusPainted(false);
+       btn.setToolTipText(tooltip);
+       return btn;
+   }
+    
 }
+
+
