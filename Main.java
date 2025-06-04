@@ -153,10 +153,6 @@ public class Main extends JFrame implements ActionListener {
             if (qCount == 1) {
                 if (!validateAge(input)) return;
             }
-            if (qCount == 5) {
-                handleStep5(input);
-                return;
-            }
             // Normal input handling
             currentAnswers.add(input);
             qCount++;
@@ -184,17 +180,6 @@ public class Main extends JFrame implements ActionListener {
             return false;
         }
         return true;
-    }
-
-    private void handleStep5(String input) {
-        currentAnswers.add(input);
-        qCount++;
-        textField.setText("");
-        if (qCount < questions.length) {
-            label.setText(questions[qCount]);
-        } else {
-            finalizeProfile();
-        }
     }
 
     private void finalizeProfile() {
